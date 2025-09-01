@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Edulearn – Material & Lesson Manager</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --primary: #e63946;
+  --primary-2: #a4161a;
+  --bg: #121212;
+  --card: #1e1e1e;
+  --muted: #a0a0a0;
+  --text: #f5f5f5;
+  --border: rgba(255,255,255,0.08);
+  --radius: 16px;
+  --card-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  --notification: #ff9f43;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html, body{height:100%; background:
+  radial-gradient(1000px 600px at 10% -10%, rgba(230, 57, 70, 0.15), transparent),
+  radial-gradient(800px 500px at 100% 10%, rgba(164, 22, 26, 0.2), transparent),
+  var(--bg);
+  color:var(--text);
+  font-family:'Inter', system-ui, Arial;
+}
+
+.container{max-width:1200px;margin:24px auto;padding:20px}
+
+/* Header */
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-radius:14px;background:linear-gradient(180deg,#1a1a1a,#111);border:1px solid var(--border);box-shadow:var(--card-shadow);margin-bottom:24px;}
+.brand{display:flex;gap:14px;align-items:center}
+.brand .logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--primary-2));box-shadow:0 8px 26px rgba(230, 57, 70, 0.4);display:flex;align-items:center;justify-content:center;}
+.brand .logo i{font-size:20px;}
+.brand b{font-weight:800;font-size:22px;color:var(--primary);}
+.brand div{font-size:12px;color:var(--muted);margin-top:2px;}
+.nav-links{display:flex;gap:16px;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;padding:10px 16px;border-radius:10px;transition:0.2s;font-weight:500;}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,0.03);}
+
+/* Page Title */
+.page-title{font-family:'Orbitron', sans-serif;color:var(--primary);font-size:32px;margin:28px 0;text-align:center;letter-spacing:1px;text-shadow:0 2px 10px rgba(230, 57, 70, 0.3);}
+
+/* Filters */
+.filters{display:flex;gap:16px;flex-wrap:wrap;align-items:center;background:linear-gradient(180deg,#141414,#101010);padding:16px 20px;border-radius:14px;border:1px solid var(--border);margin-bottom:24px;box-shadow:var(--card-shadow);}
+.search-box{flex:1;position:relative}
+.search-box input{width:100%;padding:12px 20px;border-radius:999px;border:1px solid var(--border);background:#0f0f0f;color:var(--text);font-family:inherit;font-size:15px;}
+.search-box input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 2px rgba(230, 57, 70, 0.2);}
+.small-select{padding:12px 16px;border-radius:10px;border:1px solid var(--border);background:#0f0f0f;color:var(--text);font-family:inherit;cursor:pointer;}
+.small-select:focus{outline:none;border-color:var(--primary);}
+
+/* Materials Grid */
+.materials-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:24px;margin-bottom:32px;}
+.material-card{background:linear-gradient(180deg,#161616,#0f0f0f);border-radius:var(--radius);padding:20px;border:1px solid var(--border);box-shadow:var(--card-shadow);transition:transform 0.3s, box-shadow 0.3s;position:relative;}
+.material-card:hover{transform:translateY(-5px);box-shadow:0 25px 50px rgba(0,0,0,0.4);}
+.material-header{padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.material-title{font-family:'Orbitron',sans-serif;color:var(--primary);font-size:20px;margin-bottom:6px;letter-spacing:0.5px;}
+.material-desc{color:var(--muted);font-size:14px;line-height:1.5;}
+.material-progress{background:rgba(255,255,255,0.03);padding:14px;border-radius:12px;margin-bottom:16px}
+.progress-bar{height:12px;background:#0b0b0b;border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-2));width:0%;transition:width .5s ease-out;border-radius:999px;}
+.progress-text{display:flex;justify-content:space-between;color:var(--muted);font-size:14px;margin-top:10px;font-weight:500;}
+
+/* Dynamic Subjects Panel */
+#subjects{margin-top:28px}
+.dynamic-subject{background:linear-gradient(180deg,#141414,#0f0f0f);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;box-shadow:var(--card-shadow);position:relative;}
+.dynamic-subject .subject-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.subject-title{font-weight:800;color:var(--primary);font-size:18px;margin-bottom:4px;}
+.subject-desc{font-size:14px;color:var(--muted);}
+.subject-stats{display:flex;gap:16px;align-items:center;}
+.progress-percent{color:var(--muted);font-size:14px;font-weight:600;}
+.btn-sm{padding:10px 16px;border-radius:10px;border:0;cursor:pointer;transition:0.2s;font-family:inherit;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;}
+.btn-add{background:var(--primary);color:#fff;}
+.btn-add:hover{background:var(--primary-2);}
+.btn-view{background:linear-gradient(to right, #e63946, #a4161a);color:#fff;}
+.btn-view:hover{background:linear-gradient(to right, #a4161a, #800020);}
+.btn-edit{background:linear-gradient(to right, #e63946, #a4161a);color:#fff;}
+.btn-edit:hover{background:linear-gradient(to right, #a4161a, #800020);}
+.btn-delete{background:linear-gradient(to right, #e63946, #a4161a);color:#fff;}
+.btn-delete:hover{background:linear-gradient(to right, #a4161a, #800020);}
+.btn-complete{background:linear-gradient(to right, #e63946, #a4161a);color:#fff;}
+.btn-complete:hover{background:linear-gradient(to right, #a4161a, #800020);}
+.btn-study{background:linear-gradient(to right, #e63946, #a4161a);color:#fff;}
+.btn-study:hover{background:linear-gradient(to right, #a4161a, #800020);}
+.btn-remind{background:var(--notification);color:#fff;}
+.btn-remind:hover{background:#ff7f00;}
+
+/* Lesson item styles */
+.lesson-list{list-style:none;padding:0;margin:0;}
+.lesson-item{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);transition:background 0.2s;}
+.lesson-item:hover{background:rgba(255,255,255,0.02);border-radius:8px;padding-left:10px;padding-right:10px;}
+.lesson-item:last-child{border-bottom:none}
+.lesson-info{display:flex;align-items:center;gap:12px;flex:1;}
+.lesson-status{font-size:16px;}
+.lesson-title{font-weight:500;}
+.lesson-actions{display:flex;gap:8px;}
+.lesson-details{display:none;width:100%;padding:16px;background:rgba(0,0,0,0.2);border-radius:10px;margin-top:12px;border-left:4px solid var(--primary);}
+.lesson-details.active{display:block;animation:fadeIn 0.3s ease;}
+.lesson-summary{font-size:14px;line-height:1.6;margin-bottom:16px;color:var(--muted);}
+.detail-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+
+/* Floating Add Button */
+.add-material-btn{position:fixed;right:28px;bottom:28px;width:60px;height:60px;border-radius:999px;background:linear-gradient(135deg,var(--primary),var(--primary-2));border:0;color:#fff;font-size:28px;cursor:pointer;box-shadow:0 10px 30px rgba(230, 57, 70, 0.3);transition:0.3s;z-index:100;display:flex;align-items:center;justify-content:center;}
+.add-material-btn:hover{transform:scale(1.1) rotate(90deg);box-shadow:0 15px 40px rgba(230, 57, 70, 0.4);}
+
+/* Empty state */
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);grid-column:1/-1;}
+.empty-state i{font-size:56px;margin-bottom:20px;display:block;color:var(--primary);}
+.empty-state h3{font-size:22px;margin-bottom:12px;color:var(--text);}
+.empty-state p{font-size:16px;max-width:500px;margin:0 auto;line-height:1.6;}
+
+/* Google Login Button */
+.google-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #202124;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.google-btn img {
+  width: 18px;
+  height: 18px;
+}
+
+.google-btn:hover {
+  background-color: #303134;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.25);
+}
+
+/* Notification Badge */
+.notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--notification);
+  color: white;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Review Reminder */
+.review-reminder {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--notification);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  animation: pulse 2s infinite;
+}
+
+/* Planning Task */
+.planning-task {
+  background: linear-gradient(180deg, #1a1a1a, #151515);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+.planning-task.due {
+  border-left: 4px solid var(--notification);
+}
+
+.task-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.task-due {
+  font-size: 14px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.task-due.due {
+  color: var(--notification);
+  font-weight: 600;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--primary);
+  font-size: 20px;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #0f0f0f;
+  color: var(--text);
+  font-family: inherit;
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width:900px){
+  .material-card{grid-column:1/-1}
+  .brand b{display:none}
+  .filters{flex-direction:column;align-items:stretch;}
+  .search-box{width:100%;}
+  .detail-actions{flex-direction:column;}
+  .detail-actions button{width:100%;justify-content:center;}
+  .nav-links{gap:8px;}
+  .nav-links a{padding:8px 12px;font-size:14px;}
+  .google-btn {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin: 10px auto;
+    display: block;
+    width: 200px;
+  }
+}
+footer {
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+  padding: 20px 0;
+}
+
+}
+
+</style>
+</head>
+<body>
+  <button id="google-login" class="google-btn">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+    Login with Google
+  </button>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <div class="logo"><i class="fas fa-graduation-cap"></i></div>
+      <div>
+        <b>Edulearn</b>
+        <div>Study smarter</div>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <a href="#"><i class="fas fa-th-large"></i> Dashboard</a>
+      <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+      <a href="#"><i class="fas fa-calendar-day"></i> Daily</a>
+      <a href="#" id="notifications-link">
+        <i class="fas fa-bell"></i> Notifications
+        <span class="notification-badge" id="notification-count" style="display: none;">0</span>
+      </a>
+    </div>
+  </div>
+
+  <h1 class="page-title">Material & Lesson Manager</h1>
+
+  <!-- Notifications Panel -->
+  <div id="notifications-panel" class="dynamic-subject" style="display: none;">
+    <div class="subject-head">
+      <div>
+        <div class="subject-title">Notifications</div>
+        <div class="subject-desc">Your upcoming reviews and tasks</div>
+      </div>
+      <button class="btn-sm btn-view" onclick="hideNotifications()">
+        <i class="fas fa-times"></i> Close
+      </button>
+    </div>
+    <div id="notifications-list"></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <div class="search-box">
+      <input id="searchBox" placeholder="Search for a subject or lesson..." />
+    </div>
+    <select id="categoryFilter" class="small-select">
+      <option value="all">All Subjects</option>
+      <option value="math">Mathematics</option>
+      <option value="science">Science</option>
+      <option value="prog">Programming</option>
+    </select>
+    <select id="statusFilter" class="small-select">
+      <option value="all">All Lessons</option>
+      <option value="completed">Completed</option>
+      <option value="inprogress">In Progress</option>
+      <option value="not">Not Started</option>
+    </select>
+  </div>
+
+  <!-- Materials grid -->
+  <div class="materials-grid" id="materialsGrid">
+    <div class="empty-state" id="emptyState">
+      <i class="fas fa-book-open"></i>
+      <h3>No Subjects Yet</h3>
+      <p>Click the "+" button to add your first subject and start your learning journey</p>
+    </div>
+  </div>
+
+  <!-- User-defined subjects -->
+  <div id="subjects"></div>
+  <div style="margin-top:16px; text-align:center;">
+    <button class="btn-sm btn-add" id="addSubjectBtn">
+      <i class="fas fa-plus"></i> Add Subject
+    </button>
+    <button class="btn-sm btn-remind" id="addTaskBtn">
+      <i class="fas fa-tasks"></i> Add Task
+    </button>
+  </div>
+</div>
+
+<button class="add-material-btn" id="floatingAdd">+</button>
+
+<!-- Add Task Modal -->
+<div id="taskModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Add New Task</h3>
+      <button class="close-modal" onclick="closeModal('taskModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="taskTitle">Task Title</label>
+        <input type="text" id="taskTitle" placeholder="Enter task title">
+      </div>
+      <div class="form-group">
+        <label for="taskDescription">Description</label>
+        <textarea id="taskDescription" placeholder="Enter task description"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="taskDueDate">Due Date</label>
+        <input type="datetime-local" id="taskDueDate">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm" onclick="closeModal('taskModal')">Cancel</button>
+      <button class="btn-sm btn-add" onclick="saveTask()">Save Task</button>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <p>Made with cats by Malak</p>
+</footer>
+
+<!-- Add Review Schedule Modal -->
+<div id="reviewModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Schedule Review</h3>
+      <button class="close-modal" onclick="closeModal('reviewModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="reviewLesson">Lesson</label>
+        <select id="reviewLesson">
+          <!-- Options will be populated dynamically -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="reviewDate">Review Date</label>
+        <input type="datetime-local" id="reviewDate">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm" onclick="closeModal('reviewModal')">Cancel</button>
+      <button class="btn-sm btn-add" onclick="saveReview()">Schedule Review</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase App (the core Firebase SDK) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-auth.js";
+
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAaDyRa1W5RU0UBiZxXj00OmQby8Oi913Q",
+    authDomain: "edulearn-f01a8.firebaseapp.com",
+    projectId: "edulearn-f01a8",
+    storageBucket: "edulearn-f01a8.appspot.com",
+    messagingSenderId: "603860389304",
+    appId: "1:603860389304:web:e37eb290dee6831fd4934d"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // Google login button handler
+  document.getElementById("google-login").addEventListener("click", () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+
+        // Save user data to localStorage
+        localStorage.setItem("user", JSON.stringify({
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL
+        }));
+
+        console.log("Welcome " + user.displayName);
+        alert("Login successful! Welcome " + user.displayName);
+        
+        // Redirect to home page
+        window.location.href = "index.html";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Login failed: " + error.message);
+      });
+  });
+
+  // Check if user is already logged in
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      console.log("User is signed in:", user.email);
+      // Update UI for logged in user if needed
+    } else {
+      console.log("User is signed out");
+    }
+  });
+</script>
+
+<script>
+const LS_LESSONS = 'edulearn_lessons';
+const LS_SUBJECTS = 'edulearn_subjects';
+const LS_NEXTID = 'edulearn_next_lid';
+const LS_REVIEWS = 'edulearn_reviews';
+const LS_TASKS = 'edulearn_tasks';
+
+let lessonsData = JSON.parse(localStorage.getItem(LS_LESSONS) || '{}');
+let subjects = JSON.parse(localStorage.getItem(LS_SUBJECTS) || '[]');
+let nextLessonId = parseInt(localStorage.getItem(LS_NEXTID) || '100');
+let reviews = JSON.parse(localStorage.getItem(LS_REVIEWS) || '[]');
+let tasks = JSON.parse(localStorage.getItem(LS_TASKS) || '[]');
+
+const subjectsContainer = document.getElementById('subjects');
+const materialsGrid = document.getElementById('materialsGrid');
+const emptyState = document.getElementById('emptyState');
+const addSubjectBtn = document.getElementById('addSubjectBtn');
+const floatingAdd = document.getElementById('floatingAdd');
+const addTaskBtn = document.getElementById('addTaskBtn');
+const notificationsLink = document.getElementById('notifications-link');
+const notificationsPanel = document.getElementById('notifications-panel');
+const notificationsList = document.getElementById('notifications-list');
+const notificationCount = document.getElementById('notification-count');
+
+function persistAll(){
+  localStorage.setItem(LS_LESSONS, JSON.stringify(lessonsData));
+  localStorage.setItem(LS_SUBJECTS, JSON.stringify(subjects));
+  localStorage.setItem(LS_NEXTID, nextLessonId);
+  localStorage.setItem(LS_REVIEWS, JSON.stringify(reviews));
+  localStorage.setItem(LS_TASKS, JSON.stringify(tasks));
+}
+
+function computeProgress(lessonIds){
+  if(!lessonIds || lessonIds.length===0) return 0;
+  const done = lessonIds.filter(id => lessonsData[id] && lessonsData[id].completed).length;
+  return Math.round((done/lessonIds.length)*100);
+}
+
+// Add new subject
+function addSubject(){
+  const name = prompt("Subject name:");
+  if(!name) return;
+  const desc = prompt("Short description (optional):") || '';
+  const id = 's_' + Date.now();
+  subjects.push({ id, name, desc, lessonIds: [], category:'custom' });
+  persistAll();
+  renderMaterialsGrid();
+  renderSubjectsPanel();
+}
+
+// Add lesson to subject
+function addLessonToSubject(subjectIndex){
+  const title = prompt("Lesson name:");
+  if(!title) return;
+  const lid = nextLessonId++;
+  lessonsData[lid] = { id:lid, title, summary:'Write your summary here...', questions:[], completed:false };
+  subjects[subjectIndex].lessonIds.push(lid);
+  persistAll();
+  renderMaterialsGrid();
+  renderSubjectsPanel();
+}
+
+// Edit subject
+function promptEditSubject(idx){
+  const sub = subjects[idx];
+  const newName = prompt("Edit subject name:", sub.name);
+  if(newName===null) return;
+  const newDesc = prompt("Edit description:", sub.desc || '') || '';
+  sub.name = newName || sub.name;
+  sub.desc = newDesc;
+  persistAll();
+  renderMaterialsGrid();
+  renderSubjectsPanel();
+}
+
+// Delete subject
+function deleteSubject(idx){
+  if(!confirm("Are you sure you want to delete this subject and all its lessons?")) return;
+  const lessonIds = subjects[idx].lessonIds;
+  lessonIds.forEach(id => delete lessonsData[id]);
+  subjects.splice(idx,1);
+  persistAll();
+  renderMaterialsGrid();
+  renderSubjectsPanel();
+}
+
+// Delete lesson
+function deleteLesson(subjectIndex, lessonId){
+  if(!confirm("Are you sure you want to delete this lesson?")) return;
+  lessonsData[lessonId] && delete lessonsData[lessonId];
+  const idx = subjects[subjectIndex].lessonIds.indexOf(lessonId);
+  if(idx>-1) subjects[subjectIndex].lessonIds.splice(idx,1);
+  persistAll();
+  renderMaterialsGrid();
+  renderSubjectsPanel();
+}
+
+// Edit lesson
+function editLesson(subjectIndex, lessonId){
+  const lesson = lessonsData[lessonId];
+  const newTitle = prompt("Edit lesson name:", lesson.title);
+  if(newTitle === null) return;
+  lesson.title = newTitle;
+  
+  const newSummary = prompt("Edit lesson summary:", lesson.summary);
+  if(newSummary !== null) {
+    lesson.summary = newSummary;
+  }
+  
+  persistAll();
+  renderMaterialsGrid();
+  renderSubjectsPanel();
+}
+
+// Toggle lesson completion
+function toggleCompleteLesson(subjectIndex, lessonId){
+  const lesson = lessonsData[lessonId];
+  lesson.completed = !lesson.completed;
+  persistAll();
+  renderMaterialsGrid();
+  renderSubjectsPanel();
+}
+
+// Toggle lesson details
+function toggleLessonDetails(lessonId){
+  const details = document.getElementById(`lesson-details-${lessonId}`);
+  details.classList.toggle('active');
+}
+
+// Schedule review for a lesson
+function scheduleReview(lessonId) {
+  // Populate lessons dropdown
+  const reviewLessonSelect = document.getElementById('reviewLesson');
+  reviewLessonSelect.innerHTML = '';
+  
+  Object.values(lessonsData).forEach(lesson => {
+    const option = document.createElement('option');
+    option.value = lesson.id;
+    option.textContent = lesson.title;
+    if (lessonId) option.selected = true;
+    reviewLessonSelect.appendChild(option);
+  });
+  
+  // Set default date to tomorrow
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  document.getElementById('reviewDate').value = tomorrow.toISOString().slice(0, 16);
+  
+  // Show modal
+  openModal('reviewModal');
+}
+
+// Save review schedule
+function saveReview() {
+  const lessonId = parseInt(document.getElementById('reviewLesson').value);
+  const reviewDate = new Date(document.getElementById('reviewDate').value);
+  
+  if (!lessonId || isNaN(reviewDate.getTime())) {
+    alert('Please select a lesson and a valid date');
+    return;
+  }
+  
+  // Add or update review
+  const existingIndex = reviews.findIndex(r => r.lessonId === lessonId);
+  if (existingIndex >= 0) {
+    reviews[existingIndex].reviewDate = reviewDate.toISOString();
+  } else {
+    reviews.push({
+      lessonId,
+      reviewDate: reviewDate.toISOString(),
+      createdAt: new Date().toISOString()
+    });
+  }
+  
+  persistAll();
+  closeModal('reviewModal');
+  renderNotifications();
+  renderSubjectsPanel();
+}
+
+// Check if a lesson has a review scheduled
+function hasScheduledReview(lessonId) {
+  return reviews.some(r => r.lessonId === lessonId);
+}
+
+// Check if a lesson is due for review
+function isReviewDue(lessonId) {
+  const review = reviews.find(r => r.lessonId === lessonId);
+  if (!review) return false;
+  
+  const reviewDate = new Date(review.reviewDate);
+  const now = new Date();
+  return now >= reviewDate;
+}
+
+// Add new task
+function addTask() {
+  // Clear form
+  document.getElementById('taskTitle').value = '';
+  document.getElementById('taskDescription').value = '';
+  
+  // Set default date to tomorrow
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  document.getElementById('taskDueDate').value = tomorrow.toISOString().slice(0, 16);
+  
+  openModal('taskModal');
+}
+
+// Save task
+function saveTask() {
+  const title = document.getElementById('taskTitle').value.trim();
+  const description = document.getElementById('taskDescription').value.trim();
+  const dueDate = new Date(document.getElementById('taskDueDate').value);
+  
+  if (!title || isNaN(dueDate.getTime())) {
+    alert('Please enter a title and valid due date');
+    return;
+  }
+  
+  tasks.push({
+    id: 't_' + Date.now(),
+    title,
+    description,
+    dueDate: dueDate.toISOString(),
+    completed: false,
+    createdAt: new Date().toISOString()
+  });
+  
+  persistAll();
+  closeModal('taskModal');
+  renderNotifications();
+}
+
+// Check if a task is due
+function isTaskDue(task) {
+  const dueDate = new Date(task.dueDate);
+  const now = new Date();
+  return !task.completed && now >= dueDate;
+}
+
+// Toggle task completion
+function toggleTaskCompletion(taskId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (task) {
+    task.completed = !task.completed;
+    persistAll();
+    renderNotifications();
+  }
+}
+
+// Delete task
+function deleteTask(taskId) {
+  if (confirm('Are you sure you want to delete this task?')) {
+    tasks = tasks.filter(t => t.id !== taskId);
+    persistAll();
+    renderNotifications();
+  }
+}
+
+// Open modal
+function openModal(modalId) {
+  document.getElementById(modalId).style.display = 'flex';
+}
+
+// Close modal
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+}
+
+// Show notifications
+function showNotifications() {
+  notificationsPanel.style.display = 'block';
+  renderNotifications();
+}
+
+// Hide notifications
+function hideNotifications() {
+  notificationsPanel.style.display = 'none';
+}
+
+// Render notifications
+function renderNotifications() {
+  notificationsList.innerHTML = '';
+  let dueCount = 0;
+  
+  // Check for due reviews
+  reviews.forEach(review => {
+    if (isReviewDue(review.lessonId)) {
+      const lesson = lessonsData[review.lessonId];
+      if (lesson) {
+        const notification = document.createElement('div');
+        notification.className = 'planning-task due';
+        notification.innerHTML = `
+          <div class="task-title">Review: ${lesson.title}</div>
+          <div class="task-due due">
+            <i class="fas fa-clock"></i> Due for review now
+          </div>
+          <button class="btn-sm btn-study" onclick="startReview(${review.lessonId})" style="margin-top: 10px;">
+            <i class="fas fa-graduation-cap"></i> Start Review
+          </button>
+        `;
+        notificationsList.appendChild(notification);
+        dueCount++;
+      }
+    }
+  });
+  
+  // Check for due tasks
+  tasks.forEach(task => {
+    if (isTaskDue(task)) {
+      const notification = document.createElement('div');
+      notification.className = 'planning-task due';
+      notification.innerHTML = `
+        <div class="task-title">${task.title}</div>
+        <div class="task-due due">
+          <i class="fas fa-clock"></i> Due: ${new Date(task.dueDate).toLocaleString()}
+        </div>
+        <div style="margin-top: 10px; display: flex; gap: 8px;">
+          <button class="btn-sm btn-complete" onclick="toggleTaskCompletion('${task.id}')">
+            <i class="fas fa-check"></i> Mark Complete
+          </button>
+          <button class="btn-sm btn-delete" onclick="deleteTask('${task.id}')">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      `;
+      notificationsList.appendChild(notification);
+      dueCount++;
+    }
+  });
+  
+  // Update notification badge
+  if (dueCount > 0) {
+    notificationCount.textContent = dueCount;
+    notificationCount.style.display = 'flex';
+  } else {
+    notificationCount.style.display = 'none';
+    notificationsList.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--muted)">No notifications</div>';
+  }
+}
+
+// Start review for a lesson
+function startReview(lessonId) {
+  // Find which subject this lesson belongs to
+  for (let i = 0; i < subjects.length; i++) {
+    if (subjects[i].lessonIds.includes(lessonId)) {
+      // Show the lesson details
+      toggleLessonDetails(lessonId);
+      
+      // Scroll to the lesson
+      const lessonElement = document.getElementById(`lesson-details-${lessonId}`);
+      if (lessonElement) {
+        lessonElement.scrollIntoView({ behavior: 'smooth' });
+      }
+      
+      // Hide notifications
+      hideNotifications();
+      break;
+    }
+  }
+}
+
+function renderMaterialsGrid(){
+  materialsGrid.innerHTML = '';
+  
+  if(subjects.length === 0){
+    materialsGrid.appendChild(emptyState);
+    return;
+  }
+  
+  emptyState.remove();
+  
+  subjects.forEach(sub=>{
+    const col = document.createElement('div');
+    col.className = 'material-card';
+    
+    // Check if any lesson in this subject needs review
+    const needsReview = sub.lessonIds.some(lessonId => isReviewDue(lessonId));
+    
+    col.innerHTML = `
+      ${needsReview ? '<div class="review-reminder"><i class="fas fa-clock"></i> Review Due</div>' : ''}
+      <div class="material-header">
+        <div class="material-title">${sub.name}</div>
+        <div class="material-desc">${sub.desc || ''}</div>
+      </div>
+      <div class="material-progress">
+        <div class="progress-bar"><div class="progress-fill" style="width:${computeProgress(sub.lessonIds)}%"></div></div>
+        <div class="progress-text"><span>Progress</span><span>${computeProgress(sub.lessonIds)}%</span></div>
+      </div>
+    `;
+    materialsGrid.appendChild(col);
+  });
+}
+
+function renderSubjectsPanel(){
+  subjectsContainer.innerHTML = '';
+  
+  subjects.forEach((sub, idx)=>{
+    const card = document.createElement('div');
+    card.className = 'dynamic-subject';
+    
+    // Check if any lesson in this subject needs review
+    const needsReview = sub.lessonIds.some(lessonId => isReviewDue(lessonId));
+    
+    card.innerHTML = `
+      ${needsReview ? '<div class="review-reminder"><i class="fas fa-clock"></i> Review Due</div>' : ''}
+      <div class="subject-head">
+        <div>
+          <div class="subject-title">${sub.name}</div>
+          <div class="subject-desc">${sub.desc || ''}</div>
+        </div>
+        <div class="subject-stats">
+          <div class="progress-percent">${computeProgress(sub.lessonIds)}% Complete</div>
+          <button class="btn-sm btn-add" onclick="addLessonToSubject(${idx})">
+            <i class="fas fa-plus"></i> Add Lesson
+          </button>
+        </div>
+      </div>
+      <ul class="lesson-list"></ul>
+    `;
+    const ul = card.querySelector('ul');
+    
+    if(sub.lessonIds.length === 0){
+      const li = document.createElement('li');
+      li.innerHTML = `<div style="padding:20px;text-align:center;color:var(--muted)">No lessons yet</div>`;
+      ul.appendChild(li);
+    } else {
+      sub.lessonIds.forEach(lid=>{
+        const l = lessonsData[lid];
+        if(!l) return;
+        
+        const hasReview = hasScheduledReview(lid);
+        const reviewDue = isReviewDue(lid);
+        
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <div class="lesson-item">
+            <div class="lesson-info">
+              <span class="lesson-status">${l.completed ? '✅' : '📝'}</span>
+              <span class="lesson-title">${l.title}</span>
+              ${reviewDue ? '<span style="color: var(--notification); margin-left: 8px;"><i class="fas fa-clock"></i></span>' : ''}
+            </div>
+            <div class="lesson-actions">
+              <button class="btn-sm btn-view" onclick="toggleLessonDetails(${lid})">
+                <i class="fas fa-eye"></i> View
+              </button>
+              ${!hasReview ? `<button class="btn-sm btn-remind" onclick="scheduleReview(${lid})">
+                <i class="fas fa-bell"></i> Remind
+              </button>` : ''}
+            </div>
+          </div>
+          <div class="lesson-details" id="lesson-details-${lid}">
+            <div class="lesson-summary">
+              ${l.summary}
+            </div>
+            <div class="detail-actions">
+              <button class="btn-sm btn-edit" onclick="editLesson(${idx}, ${lid})">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn-sm btn-delete" onclick="deleteLesson(${idx}, ${lid})">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+              <button class="btn-sm btn-complete" onclick="toggleCompleteLesson(${idx}, ${lid})">
+                <i class="fas fa-check"></i> ${l.completed ? 'Mark Incomplete' : 'Complete'}
+              </button>
+              <button class="btn-sm btn-study" onclick="window.location.href='profile.html'">
+                <i class="fas fa-graduation-cap"></i> Study
+              </button>
+              ${hasReview ? `<button class="btn-sm btn-remind" onclick="scheduleReview(${lid})">
+                <i class="fas fa-bell"></i> ${reviewDue ? 'Review Due' : 'Reschedule'}
+              </button>` : ''}
+            </div>
+          </div>
+        `;
+        ul.appendChild(li);
+      });
+    }
+    
+    subjectsContainer.appendChild(card);
+  });
+}
+
+// Initialize
+addSubjectBtn.addEventListener('click', addSubject);
+floatingAdd.addEventListener('click', addSubject);
+addTaskBtn.addEventListener('click', addTask);
+notificationsLink.addEventListener('click', function(e) {
+  e.preventDefault();
+  showNotifications();
+});
+
+// Check for due items on page load
+setInterval(renderNotifications, 60000); // Check every minute
+
+renderMaterialsGrid();
+renderSubjectsPanel();
+renderNotifications();
+</script>
+
+</body>
+</html>

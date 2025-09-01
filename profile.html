@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="ar" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edulearn </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    /* ===== Dark Grey + Red Theme ===== */
+    :root{
+      --bg:#121212;
+      --panel:#1e1e1e;
+      --ink:#f5f5f5;
+      --muted:#bbbbbb;
+      --accent:#e63946;   /* Red */
+      --accent-2:#a4161a; /* Darker Red */
+      --ring:#e63946;
+      --success:#22c55e; 
+      --danger:#ef4444; 
+      --warn:#f59e0b;
+      --card-shadow:0 20px 45px rgba(0,0,0,.45);
+      --radius:22px;
+    }
+
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: radial-gradient(1000px 600px at 10% -10%, #e6394622, transparent),
+                  radial-gradient(800px 500px at 100% 10%, #a4161a33, transparent),
+                  var(--bg);
+      color:var(--ink);
+      font-family:'Cairo', system-ui, sans-serif
+    }
+
+    a{color:var(--accent)}
+
+    .container{max-width:1150px;margin:0 auto;padding:22px}
+
+    /* ====== Nav ====== */
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand .logo{
+      width:34px;height:34px;border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      box-shadow:0 8px 26px rgba(230,57,70,.5)
+    }
+    .brand b{font-weight:800;letter-spacing:.5px}
+    .nav .menu{display:flex;gap:14px;color:var(--muted)}
+    .btn{
+      appearance:none;border:0;border-radius:14px;padding:12px 16px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:white;font-weight:800;cursor:pointer;
+      box-shadow:0 12px 30px rgba(230,57,70,.4);
+      transition:.3s
+    }
+    .btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+    .btn.flat{background:#2a2a2a;color:var(--ink)}
+    .btn.block{width:100%}
+    .btn:hover{transform:scale(1.05)}
+
+    /* ===== Hero ===== */
+    .hero{
+      position:relative;overflow:hidden;border-radius:var(--radius);
+      background:linear-gradient(180deg,#1c1c1c, #111);
+      min-height:260px;display:grid;grid-template-columns: 1.2fr 0.8fr
+    }
+   .hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: url("study.jpg") center/cover no-repeat; /* الصورة هنا */
+  min-height: 260px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  color: var(--ink);
+}
+
+/* نضيف طبقة غامقة عشان النص يبين */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(18,18,18,0.8), rgba(18,18,18,0.9));
+  z-index: 0;
+}
+
+.hero .content {
+  position: relative;
+  padding: 32px;
+  z-index: 1; /* يخلي النص فوق */
+}
+.hero h1 {
+  margin: 0 0 6px;
+  font-size: clamp(26px,3.4vw,38px);
+  font-weight: 800;
+  color: var(--accent);
+}
+.hero p {
+  margin: 0;
+  color: var(--muted);
+}
+
+    .hero .cta{display:flex;gap:10px;margin-top:18px}
+    .hero .panel{
+      position:relative;margin:22px;align-self:center;
+      background:rgba(255,255,255,0.02);backdrop-filter: blur(6px);
+      border:1px solid #333;box-shadow:var(--card-shadow);
+      border-radius:18px;padding:16px
+    }
+
+    /* ====== Sections / Cards ====== */
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin-top:22px}
+    .card{
+      background:linear-gradient(180deg,#1a1a1a,#111);
+      border:1px solid #333;
+      border-radius:var(--radius);
+      box-shadow:var(--card-shadow);padding:18px
+    }
+    .card h3{margin:0 0 10px;color:var(--accent)}
+    .muted{color:var(--muted)}
+    .input, textarea, select{
+      width:100%;padding:12px 14px;border-radius:14px;
+      border:1px solid #333;background:#111;color:var(--ink);outline:none
+    }
+    textarea{min-height:160px;resize:vertical}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .sep{height:1px;background:linear-gradient(90deg,transparent,#333,transparent);margin:12px 0}
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;padding:6px 10px;
+      border-radius:999px;background:#1c1c1c;border:1px solid #333;
+      color:#ddd;font-size:12px
+    }
+    .progress{height:12px;background:#222;border-radius:999px;overflow:hidden}
+    .progress>div{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%}
+
+    /* ===== Stepper ===== */
+    .stepper{display:flex;gap:10px;flex-wrap:wrap}
+    .chip{padding:6px 12px;border-radius:999px;border:1px solid #333;background:#1a1a1a;font-size:13px;color:#bbb}
+    .chip.active{background:linear-gradient(135deg,#2a2a2a,#111);color:var(--ink)}
+
+    /* ===== QCM ===== */
+    .qcm-item{border:1px solid #333;border-radius:16px;padding:14px;background:#111}
+    .option{display:flex;gap:8px;align-items:center;padding:8px;border-radius:12px;border:1px solid #333;margin-top:8px;cursor:pointer}
+    .option.correct{border-color:#22c55e;background:#0f1c17}
+    .option.wrong{border-color:#ef4444;background:#1e0e15}
+
+    table{width:100%;border-collapse:separate;border-spacing:0 10px}
+    td,th{padding:10px 12px;border-top:1px solid #333;border-bottom:1px solid #333;background:#111}
+    th{background:#1c1c1c;text-align:right}
+    tr td:first-child, tr th:first-child{border-top-right-radius:12px;border-bottom-right-radius:12px}
+    tr td:last-child, tr th:last-child{border-top-left-radius:12px;border-bottom-left-radius:12px}
+
+    .center{display:flex;align-items:center;justify-content:center}
+    .menu {list-style: none;display: flex;gap: 15px;padding: 0;margin: 0}
+    .menu li {display: inline-block}
+    .btn-nav {
+      display: inline-block;padding: 10px 20px;
+      background: var(--accent);color: #fff;
+      text-decoration: none;border-radius: 25px;
+      font-weight: bold;transition: 0.3s;
+    }
+    .btn-nav:hover {
+      background: #fff;color: var(--accent);
+      transform: scale(1.05);
+    }
+    .google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* مسافة صغيرة بين الأيقونة والنص */
+  background-color: #202124; /* لون دارك */
+  color: white;
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px; /* أصغر من قبل */
+  font-weight: 500;
+  padding: 8px 16px; /* زر أصغر */
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.google-btn img {
+  width: 18px;
+  height: 18px;
+}
+
+.google-btn:hover {
+  background-color: #303134; /* أفتح شوية عند الهوفر */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.25);
+}
+
+
+  </style>
+</head>
+<body>
+  <!-- باقي الكود كما هو (JS + structure) -->
+<button id="google-login" class="google-btn">
+  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+  Login with Google
+</button>
+
+
+
+  <div class="container">
+    <!-- ====== Nav ====== -->
+    
+
+
+    <!-- ====== Hero ====== -->
+    <section class="hero">
+      <div class="content">
+        <h1>REGRET hurts more than FAILURE</h1>
+        <p>paste your summary → QCM questions → results → smart review → motivation → daily schedule.</p>
+       
+      </div>
+      
+      </div>
+      <div class="overlay"></div>
+    </section>
+
+
+    <!-- ====== Workflow Cards ====== -->
+    <div class="grid" id="flow">
+      <!-- Stepper -->
+      <section class="card" style="grid-column: span 12 / span 12">
+        <div class="stepper" id="stepper"></div>
+      </section>
+
+      <!-- 1) Paste Summary -->
+      <section class="card" style="grid-column: span 12 / span 12" id="step1">
+        <h3>  1-Your lesson/summary </h3>
+        <p class="muted">Past here your lesson/summary then tab <b>Next</b> To organize it</p>
+        <textarea id="summaryIn" placeholder="Past here..."></textarea>
+        <div class="row" style="margin-top:12px"><button class="btn" id="next1">Next</button></div>
+      </section>
+
+      <!-- 2) Show Summary -->
+      <section class="card" style="grid-column: span 12 / span 12; display:none" id="step2">
+        <h3> 2-Lesson/summary </h3>
+        <div id="summaryView" class="qcm-item" style="line-height:1.9"></div>
+        <div class="row" style="margin-top:12px">
+  <button class="btn" id="next2" type="button" onclick="showStep(3)">Next</button>
+</div>
+
+      </section>
+
+      <!-- 3) Paste QCM -->
+      <section class="card" style="grid-column: span 12 / span 12; display:none" id="step3">
+        <h3> 3- Preparing QCMs </h3>
+        <p class="muted"> Write that for your IA
+        <br>Q: The Question
+        <br>A) 1st option 
+        <br>B) 2nd option
+        <br>C) 3rd option
+        <br>D) 4th option
+        <br>Answer: A
+        <br>--- (use this to separate between quetions)
+        </p>
+        <textarea id="qcmIn" placeholder=" past here your quetions"></textarea>
+        <div class="row" style="margin-top:12px"><button class="btn" id="next3">Next</button></div>
+      </section>
+
+      <!-- 4) Run Quiz -->
+      <section class="card" style="grid-column: span 12 / span 12; display:none" id="step4">
+        <h3> 4-QCM</h3>
+        <div id="quizArea"></div>
+      </section>
+
+      <!-- 5) Result -->
+      <section class="card" style="grid-column: span 12 / span 12; display:none" id="step5">
+  <h3>5-Result</h3>
+  <div id="resultView" class="center" style="flex-direction:column;gap:10px"></div>
+  <div class="row" style="margin-top:12px">
+    <!-- بدل 5 بخطوة جديدة (مثلاً 6 أو 1 حسب المطلوب) -->
+    <button class="btn" id="next5" type="button" onclick="showStep(6)">Next</button>
+  </div>
+</section>
+
+
+
+      <!-- 6) Spaced Repetition -->
+      <section class="card" style="grid-column: span 12 / span 12; display:none" id="step6">
+  <h3>6-Spaced Repetition</h3>
+  <div id="srTable"></div>
+  <div class="row" style="margin-top:12px">
+    <button class="btn" id="next7" type="button" onclick="showStep(7)">Next</button>
+  </div>
+</section>
+
+
+      <!-- 7) Motivation -->
+     <section class="card" style="grid-column: span 12 / span 12; display:none" id="step7">
+  <h3>7-Motivation</h3>
+  <div id="motivation" class="qcm-item center" style="min-height:120px;font-size:20px;font-weight:800"></div>
+  <div class="row" style="margin-top:12px">
+    <button class="btn" id="next8" type="button" onclick="showStep(8)">Planning</button>
+  </div>
+</section>
+
+
+
+      <!-- 8) Daily Schedule -->
+      <section class="card" style="grid-column: span 12 / span 12; display:none" id="step8">
+        <h3>Planing</h3>
+        <p class="muted">Past your plan here like that:task - HH:MM every task in a line</p>
+        <textarea id="schedIn" placeholder="مثال:\n08:00 - رياضيات: تكامل\n09:30 - استراحة\n10:00 - QCM فيزياء\n..."></textarea>
+        <div class="row" style="margin-top:10px"><button class="btn" id="buildTable"> Show me</button></div>
+        <div class="sep"></div>
+        <div id="schedTable"></div>
+      </section>
+      <div id="schedTable"></div>
+
+<div class="row" style="margin-top:12px">
+  <button class="btn" id="downloadPDF" style="display:none">Download the PDF</button>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+/* ========= Helpers ========= */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m])) }
+
+/* ========= State ========= */
+let state = {
+  step: 1,
+  summary: "",
+  qcm: [],
+  quizIdx: 0,
+  score: 0
+};
+
+/* ========= Stepper ========= */
+function showStep(n){
+  $$(".card").forEach(sec => sec.style.display="none");
+  const step = $("#step"+n);
+  if(step) step.style.display="block";
+  state.step = n;
+
+  // لو فتحنا Step7، نعرض تحفيز
+  if(n===7) showQuote();
+}
+
+/* ========= Summary ========= */
+$("#next1").onclick = ()=>{
+  const txt = $("#summaryIn").value.trim();
+  if(!txt) { alert("ضعي الملخص أولاً"); return; }
+  state.summary = txt;
+  $("#summaryView").innerHTML = "<ul>"+txt.split(/\n+/).map(l=>"<li>"+escapeHtml(l)+"</li>").join("")+"</ul>";
+  showStep(2);
+};
+
+/* ========= Parse QCM ========= */
+function parseQCM(raw){
+  const blocks = raw.split(/---+/);
+  const out = [];
+  blocks.forEach(b=>{
+    const Q = b.match(/Q\s*[:\-]\s*(.+)/i);
+    const A = b.match(/A\)\s*(.+)/i);
+    const B = b.match(/B\)\s*(.+)/i);
+    const C = b.match(/C\)\s*(.+)/i);
+    const D = b.match(/D\)\s*(.+)/i);
+    const Ans = b.match(/Answer\s*[:\-]\s*([A-D])/i);
+    if(Q && A && B && C && D && Ans){
+      out.push({
+        t:Q[1],
+        opts:{A:A[1],B:B[1],C:C[1],D:D[1]},
+        corr:Ans[1].toUpperCase()
+      });
+    }
+  });
+  return out;
+}
+
+/* ========= Quiz ========= */
+$("#next3").onclick = ()=>{
+  const raw = $("#qcmIn").value.trim();
+  if(!raw){ alert("ألصقي الأسئلة أولاً"); return; }
+  state.qcm = parseQCM(raw);
+  if(!state.qcm.length){ alert("خطأ في الصيغة!"); return; }
+  state.quizIdx=0; state.score=0;
+  showStep(4);
+  renderQuestion();
+};
+
+function renderQuestion(){
+  const q = state.qcm[state.quizIdx];
+  const area = $("#quizArea"); area.innerHTML="";
+  const box = document.createElement("div"); box.className="qcm-item";
+  box.innerHTML = `<div style="font-weight:700;margin-bottom:8px">${state.quizIdx+1}/${state.qcm.length} - ${escapeHtml(q.t)}</div>`;
+
+  Object.entries(q.opts).forEach(([k,v])=>{
+    const opt = document.createElement("div");
+    opt.className="option";
+    opt.textContent = k+") "+v;
+    opt.onclick=()=>{
+      if(opt.dataset.lock) return;
+      if(k===q.corr){ opt.classList.add("correct"); state.score++; }
+      else{
+        opt.classList.add("wrong");
+        [...box.querySelectorAll(".option")].forEach(o=>{
+          if(o.textContent.startsWith(q.corr)) o.classList.add("correct");
+        });
+      }
+      [...box.querySelectorAll(".option")].forEach(o=>o.dataset.lock=1);
+      nextBtn.disabled=false;
+    };
+    box.appendChild(opt);
+  });
+
+  const nextBtn = document.createElement("button");
+  nextBtn.className="btn"; nextBtn.style.marginTop="12px";
+  nextBtn.textContent = (state.quizIdx===state.qcm.length-1)? "إنهاء":"التالي";
+  nextBtn.disabled=true;
+  nextBtn.onclick=()=>{
+    if(state.quizIdx<state.qcm.length-1){
+      state.quizIdx++; renderQuestion();
+    }else{
+      showResult(); showStep(5);
+    }
+  };
+  box.appendChild(nextBtn);
+  area.appendChild(box);
+}
+
+/* ========= Result ========= */
+function showResult(){
+  const pct = Math.round((state.score/state.qcm.length)*100);
+  $("#resultView").innerHTML = `
+    <div style="font-size:32px;font-weight:900;color:var(--accent)">
+      ${state.score}/${state.qcm.length} (${pct}%)
+    </div>
+  `;
+
+  // توليد خطة المراجعة بناءً على النتيجة
+  showSpacedRepetition(state.score, state.qcm.length);
+}
+
+
+/* ========= Motivation ========= */
+const quotes=[
+  "اليوم أفضل وقت لتبدأ، وليس غدًا.",
+  "كثِّف المحاولة… الإجابة الصحيحة أقرب مما تظن.",
+  "كل جلسة تركيز تبني ثقتك بنفسك.",
+  "أنتِ لستِ متأخرة، أنتِ على الطريق الآن.",
+  "القليل المستمر يهزم الكثير المتقطع.",
+  "اعملي اليوم ما يجعل غدكِ أسهل."
+];
+function showQuote(){
+  $("#motivation").textContent = quotes[Math.floor(Math.random()*quotes.length)];
+}
+
+/* ========= Init ========= */
+document.addEventListener("DOMContentLoaded", ()=> showStep(1));
+// مثال بيانات للتكرار (ممكن نخليها dynamic لاحقاً)
+function showSpacedRepetition(score, total) {
+  const srDiv = document.getElementById("srTable");
+  srDiv.innerHTML = ""; // clear old content
+
+  let now = new Date();
+  let plan = [];
+
+  let ratio = score / total;
+  let notes = [];
+
+  if (ratio < 0.5) {
+    // ضعيفة → مراجعة متكررة و QCM قديمة
+    plan = [0, 1, 2, 4, 7];
+    notes = [
+      "Re-read your summary carefully and highlight key points",
+      "Retry 5 old QCMs (focus on mistakes)",
+      "Write flashcards for hard parts",
+      "Mix 5 old QCMs + 2 new ones",
+      "Quick review before moving forward"
+    ];
+  } else if (ratio < 0.8) {
+    // متوسطة → توازن بين القديم والجديد
+    plan = [1, 3, 7, 15];
+    notes = [
+      "Quick review of your summary + retry 3 old QCMs",
+      "Solve 5 new QCMs on this lesson",
+      "Re-read mistakes and explain them in your own words",
+      "Mix old and new QCMs (at least 10 total)"
+    ];
+  } else {
+    // قوية → نركز على الجديد والامتحان
+    plan = [1, 3, 7, 14, 30];
+    notes = [
+      "Quick skim of your notes + 5 new QCMs",
+      "Solve 10 new QCMs",
+      "Do a mixed quiz (old + new, at least 10)",
+      "Explain lesson to a friend (or aloud to yourself)",
+      "Final revision + simulate exam condition"
+    ];
+  }
+
+  // بناء الجدول
+  let html = `<h4>📅 Your Spaced Repetition Plan</h4>`;
+  html += `<table>
+      <tr><th>Session</th><th>Date</th><th>Note</th></tr>`;
+
+  plan.forEach((days, i) => {
+    let reviewDate = new Date(now);
+    reviewDate.setDate(now.getDate() + days);
+    let formatted = reviewDate.toLocaleDateString("en-US", { 
+      weekday: "long", month: "long", day: "numeric", year: "numeric"
+    });
+
+    let note = notes[i % notes.length];
+
+    html += `<tr>
+      <td>${i + 1}</td>
+      <td>${formatted}</td>
+      <td>${note}</td>
+    </tr>`;
+  });
+
+  html += `</table>`;
+  srDiv.innerHTML = html;
+}
+
+/* ========= Daily Schedule ========= */
+$("#buildTable").onclick = ()=>{
+  const raw = $("#schedIn").value.trim();
+  if(!raw){ alert("✍️ Write your plan first"); return; }
+
+  const lines = raw.split(/\n+/);
+  let html = `<h4>🗓 Your Schedule</h4>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse; width:100%; text-align:left; font-family:Arial, sans-serif;">
+  <tr style="background:#f9d5ec; font-weight:bold; text-align:center;">
+    <th style="padding:8px; border:1px solid #ccc;">Time</th>
+    <th style="padding:8px; border:1px solid #ccc;">Task</th>
+  </tr>`;
+
+
+  lines.forEach(line=>{
+    const parts = line.split(/\s*-\s*/);
+    if(parts.length>=2){
+      let time = parts[0].trim();
+      let task = parts.slice(1).join(" - ").trim();
+      html += `<tr><td>${escapeHtml(time)}</td><td>${escapeHtml(task)}</td></tr>`;
+    }
+  });
+
+  html += `</table>`;
+  $("#schedTable").innerHTML = html;
+  $("#downloadPDF").style.display = "inline-block"; // إظهار زر التحميل
+};
+
+/* ========= Download PDF ========= */
+$("#downloadPDF").onclick = ()=>{
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFont("helvetica","bold");
+  doc.text("🗓 Your Study Schedule", 10, 10);
+  doc.setFont("helvetica","normal");
+
+  let y = 20;
+  $("#schedTable").querySelectorAll("tr").forEach((tr,i)=>{
+    let cells = tr.querySelectorAll("td,th");
+    let line = Array.from(cells).map(td=>td.innerText).join(" | ");
+    doc.text(line, 10, y);
+    y += 10;
+  });
+
+  doc.save("schedule.pdf");
+};
+
+
+
+  // زر إظهار الجدول
+  $("#buildTable").onclick = ()=>{
+    const raw = $("#schedIn").value.trim();
+    if(!raw){ alert("✍️ Write your plan first"); return; }
+
+    const lines = raw.split(/\n+/);
+    let html = `<h4>🗓 Your Schedule</h4>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse; width:100%; text-align:left; font-family:Arial, sans-serif;">
+  <tr style="background:#f9d5ec; font-weight:bold; text-align:center;">
+    <th style="padding:8px; border:1px solid #ccc;">Time</th>
+    <th style="padding:8px; border:1px solid #ccc;">Task</th>
+  </tr>`;
+
+    lines.forEach(line=>{
+      const parts = line.split(/\s*-\s*/);
+      if(parts.length>=2){
+        let time = parts[0].trim();
+        let task = parts.slice(1).join(" - ").trim();
+        html += `<tr><td>${escapeHtml(time)}</td><td>${escapeHtml(task)}</td></tr>`;
+      }
+    });
+
+    html += `</table>`;
+    $("#schedTable").innerHTML = html;
+    $("#downloadPDF").style.display = "inline-block"; // إظهار الزر
+  };
+
+  // زر تحميل PDF
+  $("#downloadPDF").onclick = ()=>{
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFont("helvetica","bold");
+    doc.text("🗓 Your Study Schedule", 10, 10);
+    doc.setFont("helvetica","normal");
+
+    let y = 20;
+    $("#schedTable").querySelectorAll("tr").forEach((tr,i)=>{
+      let cells = tr.querySelectorAll("td,th");
+      let line = Array.from(cells).map(td=>td.innerText).join(" | ");
+      doc.text(line, 10, y);
+      y += 10;
+    });
+
+    doc.save("schedule.pdf");
+  };
+
+  // escape HTML helper
+  function escapeHtml(text) {
+    var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+  }
+
+  
+</script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } 
+  from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+// 🔑 Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyAaDyRa1W5RU0UBiZxXj00OmQby8Oi913Q",
+  authDomain: "edulearn-f01a8.firebaseapp.com",
+  projectId: "edulearn-f01a8",
+  storageBucket: "edulearn-f01a8.appspot.com",
+  messagingSenderId: "603860389304",
+  appId: "1:603860389304:web:e37eb290dee6831fd4934d"
+};
+
+// 🚀 Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+// 🎯 زر تسجيل الدخول
+document.getElementById("google-login").addEventListener("click", () => {
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      const user = result.user;
+
+      // 📝 تخزين بيانات المستخدم في localStorage
+      localStorage.setItem("user", JSON.stringify({
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL
+      }));
+
+      // ✅ نجاح تسجيل الدخول
+      console.log("Welcome " + user.displayName);
+
+      // 🔄 إعادة التوجيه مباشرة للصفحة الرئيسية
+      window.location.href = "index.html";
+    })
+    .catch((error) => {
+      console.error("❌ Error:", error);
+      alert("Login failed: " + error.message);
+    });
+});
+
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+
+    if (userData) {
+      document.getElementById("user-name").textContent = userData.name;
+      document.getElementById("user-email").textContent = userData.email;
+      document.getElementById("user-photo").src = userData.photo;
+    }
+  });
+  
+
+
+  firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    console.log("المستخدم الحالي:", user.email);
+    // هنا يمكن تحميل البيانات الخاصة بالمستخدم من Firestore
+  } else {
+    // إذا لم يوجد مستخدم، يمكن إعادة التوجيه لصفحة تسجيل الدخول
+    window.location.href = "index.html";
+  }
+});
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-auth.js";
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById("welcome").innerText = "أهلاً، " + user.displayName;
+    } else {
+      window.location.href = "index.html"; // رجع للواجهة لو ما في مستخدم
+    }
+  });
+
+
+  </script>
+<img id="user-photo" width="50" style="border-radius:50%">
+<p id="user-name"></p>
+<p id="user-email"></p>
+
+
+</body>
+</html>
